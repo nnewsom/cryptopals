@@ -1,10 +1,12 @@
-import math
+# def modexp(base,exp,mod):
+#     r = 1
+#     for _ in xrange(exp):
+#         r = (r * base) % mod
+#     return r
+
+# this is sooooo much faster computationally;  not even funny
 def modexp(base,exp,mod):
-    r = 1
-    for _ in xrange(exp):
-        r = (r * base) % mod
-    return r
-    
+    return pow(base,exp,mod)
 
 if __name__ == "__main__":
     r1 = pow(4,13) % 497
