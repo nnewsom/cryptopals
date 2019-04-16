@@ -50,20 +50,40 @@ def crt(cn1,cn2,cn3):
     
     return r, n 
 
-def cube_root(n):
-    # just for small numbers
-    # need round(); otherwise 4.0 == 3 cause why not, right python?
-    x = int(round(pow(n, 1.0 /3.0)))
-    logging.debug("{fx} ({x})".format(
-                    fx = pow(n, 1.0 /3.0),
-                    x = x
-                ))
-    if pow(x,3) != n:
-        logging.debug("{n} no cube root".format(n=n))
-        return -1
-    else:
-        logging.debug("{n} cube root {x}".format(n=n,x=x))
-        return x
+# this method doesn't work for large rsa level ints
+# def cube_root(n):
+#     # just for small numbers
+#     # need round(); otherwise 4.0 == 3 cause why not, right python?
+#     x = int(round(pow(n, 1.0 /3.0)))
+#     logging.debug("{fx} ({x})".format(
+#                     fx = pow(n, 1.0 /3.0),
+#                     x = x
+#                 ))
+#     if pow(x,3) != n:
+#         logging.debug("{n} no cube root".format(n=n))
+#         return -1
+#     else:
+#         logging.debug("{n} cube root {x}".format(n=n,x=x))
+#         return x
+
+def cube_root(n,near=False):
+    result = 0
+    l = 0
+    r = n
+    while l <= r:
+        m  = ( l + r ) // 2
+        if pow(m,3) < n:
+            l = m + 1
+        elif pow(m,3) > n:
+            r = m - 1
+        else:
+            result = m
+            break
+
+    if not result and near:
+        result = l
+
+    return result
 
 def test_crt():
     cn1 = (2,3)
@@ -75,7 +95,7 @@ def test_crt():
     logging.debug("r: {r} n: {n}".format(r=r,n=n))
 
 def test_cube_root():
-    assert( cube_root(9) == -1 )
+    assert( cube_root(9) == 0 )
     assert( cube_root(8) ==  2 )
     assert( cube_root(64) ==  4 )
 

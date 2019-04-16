@@ -7,4 +7,5 @@ def int2str(i):
 
     return binascii.unhexlify( hs )
 
-
+def str2int16(s):
+    return int("0x"+binascii.hexlify(s),16)

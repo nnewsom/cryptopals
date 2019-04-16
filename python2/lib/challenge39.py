@@ -1,4 +1,6 @@
 import random
+import logging
+
 from challenge33 import modexp
 
 def fermat_test(n):
@@ -60,6 +62,13 @@ def seek_prime(start=1,end=1000,k=10):
             return p
     return None
 
+def gen_seq_prime(start=0,bitlength=8,k=10):
+    n = start if start else pow(2,bitlength)
+    while True:
+        n +=1
+        if is_prime(n,k):
+            return n
+
 def gen_rand_prime(start=100,end=500,up_range=100):
     ss = random.randint(start,end)
     num_tries = 3
@@ -112,6 +121,29 @@ def inverse_modulo(a,b):
     assert( (a*x) % b == g )
 
     return x
+
+def generate_seq_rsa_keypairs(bitlength=1024,e=3):
+    """deeeeeefinately not secure prime selection. just for test purposes"""
+    p = gen_seq_prime(bitlength=bitlength)
+    q = 0
+    while True:
+        q = gen_seq_prime(start = q+1 if q else p +1)
+        n = p * q
+        et = ( p-1 ) * ( q-1 ) # totient
+        e = e
+        try:
+            d = inverse_modulo(e,et)
+            logging.debug("p: {p}".format(p=p))
+            logging.debug("q: {q}".format(q=q))
+            logging.debug("totient: {et}".format(et=et))
+            break
+        except AssertionError:
+            # et is not coprime
+            continue
+
+    pub_key = [ e, n ]
+    priv_key = [ d, n ]
+    return pub_key, priv_key
 
 def generate_rsa_keypairs(prange,e=3):
     start,end = prange
@@ -201,6 +233,23 @@ def test_inverse_modulo():
     logging.debug("inverse modulo (17,3120) = {x}".format(x = x ))
     assert(x == 2753)
 
+def test_gen_seq_prime():
+    p = gen_seq_prime(bitlength=32)
+    logging.debug(p)
+    p = gen_seq_prime(bitlength=64)
+    logging.debug(p)
+    p = gen_seq_prime(bitlength=128)
+    logging.debug(p)
+    p = gen_seq_prime(bitlength=256) 
+    logging.debug(p)
+    p = gen_seq_prime(bitlength=512) 
+    logging.debug(p)
+    p = gen_seq_prime(bitlength=1024) 
+    logging.debug(p)
+    p,pv = generate_seq_rsa_keypairs(bitlength=1024)
+    logging.debug(p)
+    logging.debug(pv)
+
 if __name__ == "__main__":
     import logging
     logging.basicConfig(
@@ -209,3 +258,4 @@ if __name__ == "__main__":
             )
     test_fermat_gen()
     test_inverse_modulo()
+    test_gen_seq_prime()
