@@ -1,7 +1,15 @@
-from Crypto.Cipher import AES
-from lib.challenge9 import PKCS7_padding
 import random
 import string
+
+from lib.challenge7 import (
+        aes128_ecb_encrypt,
+        aes128_ecb_decrypt
+    )
+from lib.challenge9 import PKCS7_padding
+from lib.challenge10 import (
+        aes128_cbc_encrypt,
+        aes128_cbc_decrypt
+    )
 
 def random_nbytes(n):
     return open('/dev/urandom').read(n)
@@ -10,12 +18,10 @@ def random_nstr(n):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
 
 def random_encrypt_cbc(data):
-    obj = AES.new(random_nstr(16),AES.MODE_CBC,random_nbytes(16))
-    return obj.encrypt(data)
+    return aes128_cbc_enc(random_nbytes(16),random_nbytes(16),data)
 
 def random_encrypt_ecb(data):
-    obj = AES.new(random_nbytes(16),AES.MODE_ECB)
-    return obj.encrypt(data)
+    return aes128_ecb_encrypt(random_nbytes(16),data)
 
 def random_encrypt(data):
     method = random.choice(['CBC','ECB'])

@@ -3,7 +3,6 @@ import struct
 
 # https://engineering.purdue.edu/kak/compsec/NewLectures/Lecture8.pdf
 # https://kavaliro.com/wp-content/uploads/2014/03/AES.pdf
-# www.samium.org/galois.html
 
 WIKI_TBL = """00 63 7c 77 7b f2 6b 6f c5 30 01 67 2b fe d7 ab 76
 10 ca 82 c9 7d fa 59 47 f0 ad d4 a2 af 9c a4 72 c0
@@ -141,6 +140,7 @@ def print_tbl(t,inhex=False):
             print "{i}:{r}".format(i=i,r=map(lambda x: hex(x), r ))
 
 # rijndael galois field ops
+# credit to www.samium.org/galois.html. his guide was extremely helpful for this
 
 def gf_add(a,b):
     return (a & 0xff) ^ ( b & 0xff)

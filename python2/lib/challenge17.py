@@ -1,13 +1,18 @@
 from base64 import b64decode
 from random import choice
-from challenge11 import random_nstr,random_nbytes
-from challenge15 import valid_pkcs7_padding
+        
 from challenge9 import PKCS7_padding
-from challenge16 import encrypt_aes128_cbc,decrypt_aes128_cbc
-from Crypto.Cipher import AES
+from challenge10 import (
+        aes128_cbc_encrypt,
+        aes128_cbc_decrypt
+    )
+from challenge11 import (
+        random_nstr,
+        random_nbytes
+    )
+from challenge15 import valid_pkcs7_padding
 
 AES_BLOCKSIZE = 16
-RANDOM_KEY = random_nstr(AES_BLOCKSIZE)
 
 TEST_STRINGS = [
     "MDAwMDAwTm93IHRoYXQgdGhlIHBhcnR5IGlzIGp1bXBpbmc=",
@@ -25,23 +30,31 @@ TEST_STRINGS = [
 def gen_test_string():
     return b64decode(choice(TEST_STRINGS))
 
-def encrypt_aes_cbc(plaintext):
+def aes128_cbc_pkcs7_encrypt(iv,key,plaintext):
     plaintext = PKCS7_padding(plaintext,AES_BLOCKSIZE)
     iv = random_nbytes(AES_BLOCKSIZE)
     if valid_pkcs7_padding(plaintext):
-        obj = AES.new(RANDOM_KEY,AES.MODE_CBC,iv)
-        return (iv, obj.encrypt(plaintext))
+        ciphertext = aes128_cbc_encrypt(iv,key,plaintext)
+        return ciphertext
     else:
-        raise('Invalid PCKS7 padding')
+        raise('Invalid PKCS7 padding')
 
-def decrypt_aes_cbc(iv,ciphertext):
-    obj = AES.new(RANDOM_KEY,AES.MODE_CBC,iv)
-    plaintext = obj.decrypt(ciphertext)
+def aes128_cbc_pkcs7_decrypt(iv,key,ciphertext):
+    plaintext = aes128_cbc_decrypt(iv,key,ciphertext)
     if valid_pkcs7_padding(plaintext):
         padding = ord(plaintext[-1])
         return plaintext[: -1 * padding]
     else:
-        raise('Invalid PCKS7 padding')
+        raise('Invalid PKCS7 padding')
+
+ORACLE_KEY = ""
+def gen_oracle_key():
+    global ORACLE_KEY
+    ORACLE_KEY = random_nstr(16)
+    return ORACLE_KEY
+    
+def oracle_f(b0,b1):
+    return aes128_cb_pkcs7_decrypt(b0,ORACLE_KEY,b1)
 
 def padding_oracle(iv,ciphertext,oracle,blksize):
     blocks = [iv] + [ ciphertext[i:i+blksize] for i in xrange(0,len(ciphertext),blksize)]
