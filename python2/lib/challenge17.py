@@ -32,7 +32,6 @@ def gen_test_string():
 
 def aes128_cbc_pkcs7_encrypt(iv,key,plaintext):
     plaintext = PKCS7_padding(plaintext,AES_BLOCKSIZE)
-    iv = random_nbytes(AES_BLOCKSIZE)
     if valid_pkcs7_padding(plaintext):
         ciphertext = aes128_cbc_encrypt(iv,key,plaintext)
         return ciphertext
@@ -54,7 +53,7 @@ def gen_oracle_key():
     return ORACLE_KEY
     
 def oracle_f(b0,b1):
-    return aes128_cb_pkcs7_decrypt(b0,ORACLE_KEY,b1)
+    return aes128_cbc_pkcs7_decrypt(b0,ORACLE_KEY,b1)
 
 def padding_oracle(iv,ciphertext,oracle,blksize):
     blocks = [iv] + [ ciphertext[i:i+blksize] for i in xrange(0,len(ciphertext),blksize)]
