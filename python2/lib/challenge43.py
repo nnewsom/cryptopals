@@ -131,15 +131,16 @@ def dsa_sign_insecure(pkey,msg):
 
     return (r,s,k)
 
-def dsa_sign(pkey,msg,k=0):
+def dsa_sign(pkey,msg,fixedk=0):
     p,q,g,key = pkey
 
     r = 0
-    k = k
+    k = 0
     s = 0
     while s == 0:
-        if k:
-            r = modexp(g,k,p) % q
+        if fixedk:
+            k = fixedk
+            r = modexp(g,fixedk,p) % q
         else:
             while r == 0: 
                 k = random.randint(1,q)

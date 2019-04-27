@@ -74,7 +74,7 @@ print "bruteforcing weak k"
 for k in xrange(1,pow(2,16)):
     x = nonce_recover_key(msg,r,s,q,k)
     xpriv = (p,q,g,x)
-    xr,xs,xk = dsa_sign(xpriv,msg,k=k)
+    xr,xs,xk = dsa_sign(xpriv,msg,fixedk=k)
     if xr == r and xs == s:
         break
 
