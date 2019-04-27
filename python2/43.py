@@ -14,8 +14,8 @@ from lib.challenge43 import (
         nonce_recover_key
     )
 
-## I just couldn't get this to work despite having my algs run fine. 
-## Not able to even verify the given signature with the given values
+## I just couldn't get this to work with given parmas despite having my algs run fine. 
+## Not able to even verify the given signature :\
 
 ## tested against random generated values instead of sequential
 ## tested agianst externally generated parms, was able to verify 3rd party signatures fine
