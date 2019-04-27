@@ -5,7 +5,10 @@ import hashlib
 
 from challenge39 import simple_rsa
 from challenge40 import cube_root
-from challenge41 import str2int16,int2str
+from challenge41 import (
+        str2int16,
+        int2str
+    )
 
 # https://tools.ietf.org/html/rfc2313 PKCS 1.5
 # 10.1 signature process
