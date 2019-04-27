@@ -65,7 +65,7 @@ from lib.challenge43 import (
 
 p,q,g = gen_dsa_params()
 kpub,kpriv = gen_user_keys(p,q,g)
-msg = "A very clear and simple sentence for a challenge. notice no newlines hidden at the end?"
+msg = "A very clear and simple sentence for a challenge." * 3 
 r,s,_k = dsa_sign_insecure( kpriv, msg)
 v = dsa_verify( kpub, (r,s), msg)
 assert(v == True)

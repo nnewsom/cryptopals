@@ -213,7 +213,12 @@ def test_recover_key():
     logging.debug('derived: {}'.format(hex(x)))
     logging.debug('expected: {}'.format(hex(kpriv[-1])))
     assert(x == kpriv[-1] )
+
 def sanity_check_algs():
+    test_external_params()
+    test_cryptography_module()
+
+def test_external_params():
     # Private-Key: (1024 bit)
     # priv:
     x = "0x"
@@ -286,6 +291,38 @@ def sanity_check_algs():
     
     logging.debug("sanity checking verify with externally generated params+keys")
     assert( dsa_verify(pub,(r,s),msg) == True )
+
+def test_cryptography_module():
+    try:
+        from cryptography.hazmat.backends import default_backend
+        from cryptography.hazmat.primitives import hashes
+        from cryptography.hazmat.primitives.asymmetric import dsa
+        from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
+
+        privk = dsa.generate_private_key(
+                    key_size = 1024,
+                    backend = default_backend()
+            )
+
+        params = privk.parameters().parameter_numbers()
+        p,q,g = params.p,params.q,params.g
+
+        pubk = privk.public_key()
+        y = pubk.public_numbers().y
+
+        data = "SANITY_TESTSANITY_TEST_SANITYTEST"
+
+        sig = privk.sign( data, hashes.SHA1() )
+        r,s = decode_dss_signature(sig)
+
+        pub = (p,q,g,y)
+
+        logging.debug("sanity checking verify with cryptography module generated params+keys")
+        assert(dsa_verify(pub,(r,s),data) == True)
+
+    except ImportError:
+        logging.error("cannot test using another source (cryptography module)")
+
 
 if __name__ == "__main__":
     logging.basicConfig(
