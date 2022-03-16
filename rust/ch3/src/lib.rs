@@ -47,7 +47,7 @@ fn frequency_score( input: &[u8] ) -> u64 {
     return output
 }
 
-pub fn break_xor_byte( input: &[u8] ) -> (u8, Vec<u8>) {
+pub fn break_xor_byte( input: &[u8] ) -> (u64, u8, Vec<u8>) {
     let mut attempts = Vec::new();
     for i in 0..=255 {
         let xord = byte_xor( input, i );
@@ -59,8 +59,8 @@ pub fn break_xor_byte( input: &[u8] ) -> (u8, Vec<u8>) {
     attempts.sort_by_key( |k| k.0 );
     attempts.reverse();
 
-    // tuple of score, decrypt
+    // tuple of score,key,decrypt
     let best_attempt = attempts.remove(0);
 
-    (best_attempt.1,best_attempt.2)
+    best_attempt
 }
