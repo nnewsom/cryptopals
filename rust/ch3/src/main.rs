@@ -1,4 +1,4 @@
-use ch1::{hex2bin, bin2hex};
+use ch1::{hex2bin};
 use ch3::{break_xor_byte};
 /*
  The hex encoded string:
