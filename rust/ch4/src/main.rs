@@ -22,6 +22,4 @@ fn main() {
     let (_score, key, decrypt) = haystack.remove(0);
 
     println!("{} {}", key, String::from_utf8_lossy( decrypt.as_slice() ));
-    
-    
 }
