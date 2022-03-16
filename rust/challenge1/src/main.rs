@@ -119,14 +119,10 @@ pub fn base64decode( input: &[u8] ) -> Result< Vec<u8>, ConversionError> {
                 Some(byte) => byte,
                 None => return Err(ConversionError::InvalidIndex( block[i] ))
             };
-            println!("{} {:08b}", i, val);
             quad |= ( *val as u32 ) << ( 26 - (i * 6 ));
-            println!("quad: {:032b}", quad);
         }
-        println!("done: {:032b}", quad);
         for i in 0..3 {
             let t = quad >> ( 24 - ( i * 8 )) & 0xFF;
-            println!("t: {:08b}",t);
             output.push(  t as u8  );
         }
     }
