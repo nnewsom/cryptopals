@@ -1,5 +1,3 @@
-pub mod ch1;
-
 use ch1::{hex2bin,b64encode, b64decode };
 /*
 challenge is to base64 hex encoded string
