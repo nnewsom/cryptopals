@@ -19,7 +19,7 @@ fn pause(){
 }
 */
 
-pub fn hex2bin(  input: &[u8] ) -> Result< Vec<u8>, ConversionError>{
+pub fn hex2bin( input: &[u8] ) -> Result< Vec<u8>, ConversionError>{
     let mut output = Vec::new();
 
     if input.len() % 2 != 0 {
