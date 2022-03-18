@@ -1,9 +1,6 @@
-use ch6::{hamming_distance, xor_key_lengths, recover_xor_key, transpose};
+use ch6::{hamming_distance, xor_key_lengths, recover_xor_key};
 use ch5::{repeat_xor};
 use ch1::{b64decode};
-
-use std::fs::File;
-use std::io::Write;
 
 fn main() {
     let x1 = String::from("this is a test");

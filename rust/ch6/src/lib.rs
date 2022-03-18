@@ -1,20 +1,17 @@
 use ch2::{fixed_xor};
 use ch3::{break_xor_byte};
-use ch1::{pause};
 
 #[derive(Debug,Clone,Eq,PartialEq)]
 pub enum Ch6Error{
-    InvalidRowLength
+    InvalidRowLength,
+    FailedHamming,
 }
 
-pub fn hamming_distance( x0 : &[u8], x1: &[u8]) -> Option<u64>{
+pub fn hamming_distance( x0 : &[u8], x1: &[u8]) -> Result<u64,Ch6Error>{
     let mut distance = 0;
     let xor = match fixed_xor( x0, x1 ) {
         Ok(xor) => xor,
-        Err(e) => { 
-            println!("failed fixed_xor {:?}",e); 
-            return None
-        },
+        Err(_) => return Err(Ch6Error::FailedHamming)
     };
     for byte in xor {
         for i in 0..8 {
@@ -23,7 +20,7 @@ pub fn hamming_distance( x0 : &[u8], x1: &[u8]) -> Option<u64>{
             }
         }
     }
-    return Some(distance)
+    return Ok(distance)
 }
 
 /* tried two blocks but that failed to find the key length */
@@ -39,17 +36,17 @@ pub fn xor_key_lengths( buf: &[u8] ) -> Option<Vec<usize>>{
         let b3 = &buf[ (kl * 3) .. (kl * 4) ];
         let mut distance = 0u64;
         /* should write a combinations function */
-        distance += (( hamming_distance( &b0, &b1 )? as f64 / kl as f64 )
+        distance += (( hamming_distance( &b0, &b1 ).unwrap() as f64 / kl as f64 )
                              * 1000.0f64 ) as u64;
-        distance += (( hamming_distance( &b0, &b2 )? as f64 / kl as f64 )
+        distance += (( hamming_distance( &b0, &b2 ).unwrap() as f64 / kl as f64 )
                              * 1000.0f64 ) as u64;
-        distance += (( hamming_distance( &b0, &b3 )? as f64 / kl as f64 )
+        distance += (( hamming_distance( &b0, &b3 ).unwrap() as f64 / kl as f64 )
                              * 1000.0f64 ) as u64;
-        distance += (( hamming_distance( &b1, &b2 )? as f64 / kl as f64 )
+        distance += (( hamming_distance( &b1, &b2 ).unwrap() as f64 / kl as f64 )
                              * 1000.0f64 ) as u64;
-        distance += (( hamming_distance( &b1, &b3 )? as f64 / kl as f64 )
+        distance += (( hamming_distance( &b1, &b3 ).unwrap() as f64 / kl as f64 )
                              * 1000.0f64 ) as u64;
-        distance += (( hamming_distance( &b2, &b3 )? as f64 / kl as f64 )
+        distance += (( hamming_distance( &b2, &b3 ).unwrap() as f64 / kl as f64 )
                              * 1000.0f64 ) as u64;
 
         distance = ((distance as f64 / 4 as f64) * 100.0f64 )as u64;
