@@ -1,11 +1,11 @@
 #[derive(Debug)]
-pub enum FixedXorError {
+pub enum Ch2Error {
     InvalidLength
 }
 
-pub fn fixed_xor( x0: &[u8], x1: &[u8]) -> Result< Vec<u8>,FixedXorError > {
+pub fn fixed_xor( x0: &[u8], x1: &[u8]) -> Result< Vec<u8>,Ch2Error > {
     if x0.len() != x1.len() {
-        return Err(FixedXorError::InvalidLength)
+        return Err(Ch2Error::InvalidLength)
     }
     let mut output = Vec::with_capacity( x0.len() );
     for i in 0..x0.len(){

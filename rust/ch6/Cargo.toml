@@ -1,0 +1,12 @@
+[package]
+name = "ch6"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ch1 = { path="../ch1"}
+ch2 = { path="../ch2"}
+ch3 = { path="../ch3"}
+ch5 = { path="../ch5"}

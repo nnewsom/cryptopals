@@ -9,15 +9,13 @@ pub enum ConversionError {
 
 
 /* for debug */
-/*
 use std::io::{stdin, stdout, Read,Write };
-fn pause(){
+pub fn pause(){
     let mut stdout = std::io::stdout();
     stdout.write(b"Press enter to continue...").unwrap();
     stdout.flush().unwrap();
     std::io::stdin().read( &mut [0]).unwrap();
 }
-*/
 
 pub fn hex2bin( input: &[u8] ) -> Result< Vec<u8>, ConversionError>{
     let mut output = Vec::new();
@@ -91,6 +89,12 @@ pub fn b64encode( input: &[u8] ) -> Result< Vec<u8>, ConversionError> {
 
 pub fn b64decode( input: &[u8] ) -> Result< Vec<u8>, ConversionError> {
     let mut output = Vec::new();
+
+    // remove extra spaces and newline
+    let input = input.into_iter()
+                        .filter( |&i| *i != b'\n' && *i != b' ')
+                        .collect::<Vec<_>>();
+
     let table = HashMap::from( [
          (b'A',0), (b'B',1), (b'C',2), (b'D',3), (b'E',4),
          (b'F',5), (b'G',6), (b'H',7), (b'I',8), (b'J',9),
@@ -115,9 +119,13 @@ pub fn b64decode( input: &[u8] ) -> Result< Vec<u8>, ConversionError> {
             break;
         }
         for i in 0..block.len(){
+            // skip padding
+            if *block[i] == b'=' {
+                continue;
+            }
             let val = match table.get( &block[i] ) {
                 Some(byte) => byte,
-                None => return Err(ConversionError::InvalidIndex( block[i] ))
+                None => return Err(ConversionError::InvalidIndex( *block[i] ))
             };
             quad |= ( *val as u32 ) << ( 26 - (i * 6 ));
         }
